@@ -1,8 +1,9 @@
 from rest_framework.serializers import ModelSerializer
 from .models import Product, Brand, Category, SubCategory
+import json
 
 
-class ProductSerializer(ModelSerializer):
+class ProductCreateSerializer(ModelSerializer):
     class Meta:
         model = Product
         fields = '__all__'
@@ -17,6 +18,19 @@ class ProductSerializer(ModelSerializer):
         images = [str(img1), str(img2), str(img3), str(img4), str(img5)]
         data['product_imageList'] = images
 
+        return data
+
+
+class ProductSerializer(ModelSerializer):
+    class Meta:
+        model = Product
+        fields = '__all__'
+
+    def validate(self, data):
+        print("HELLO")
+        jsonDec = json.decoder.JSONDecode()
+        list = data.get('product_size')
+        data['product_size'] = jsonDec.decode(list)
         return data
 
 

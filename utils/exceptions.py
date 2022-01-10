@@ -34,8 +34,8 @@ def custom_exception_handler(exc, context):
                 "message": "Object Does Not Exist"
             }
             response.data = response_dict
-        elif 'required' in code:
 
+        elif 'required' in code:
             print(response.data.keys())
             for key, value in response.data.items():
                 message = value
@@ -77,6 +77,18 @@ def custom_exception_handler(exc, context):
             response.data = response_dict
 
         elif 'blank' in code:
+            print(response.data.keys())
+            for key, value in response.data.items():
+                message = value
+                customized_response.append(message)
+            print(customized_response)
+            response_dict = {
+                "success": False,
+                list(response.data.keys())[0]: customized_response[0][0]
+            }
+            response.data = response_dict
+
+        elif 'unique' in code:
             print(response.data.keys())
             for key, value in response.data.items():
                 message = value

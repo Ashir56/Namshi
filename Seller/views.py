@@ -2,10 +2,12 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Product, Brand, Category, SubCategory
-from .serializer import ProductSerializer, BrandSerializer, CategorySerializer, SubCategorySerializer
+from .serializer import ProductSerializer, BrandSerializer, CategorySerializer,\
+    SubCategorySerializer, ProductCreateSerializer
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import AllowAny, IsAdminUser
+import json
 
 
 TOP_SIZES = ['XS', 'S', 'M', 'L', 'XL', '2XL', '3XL']
@@ -15,7 +17,7 @@ SHOE_US_SIZES = [6, 7, 8, 9, 10, 11, 12]
 SHOE_UK_SIZES = [7, 8, 9, 10, 11, 12, 13]
 
 
-class ShopAPI(ModelViewSet):
+class BrandAPI(ModelViewSet):
     queryset = Brand.objects.all()
     permission_classes = [IsAdminUser, AllowAny, ]
 
@@ -35,7 +37,11 @@ class ProductAPI(viewsets.ModelViewSet):
     permission_classes = [IsAdminUser, AllowAny, ]
 
     def get_serializer_class(self):
-        return ProductSerializer
+        if self.action in 'create':
+            self.serializer_class = ProductCreateSerializer
+        else:
+            self.serializer_class = ProductSerializer
+        return super(ProductAPI, self).get_serializer_class()
 
     def get_permissions(self):
         if self.action in ['list', 'retrieve']:
@@ -43,6 +49,21 @@ class ProductAPI(viewsets.ModelViewSet):
         else:
             self.permission_classes = [IsAdminUser, ]
         return super().get_permissions()
+
+    def create(self, request, *args, **kwargs):
+        request.data._mutable = True
+        list = request.data.get('product_size')
+        request.data['product_size'] = json.dumps(list)
+        request.data._mutable = False
+        return super(ProductAPI, self).create(request, *args, **kwargs)
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        list = instance.product_size
+        list = eval(list)
+        instance.product_size = list
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
 
 
 class SizeTypeAPI(GenericAPIView):
@@ -108,6 +129,27 @@ class FilterByBrand(GenericAPIView):
                 if not brand in brands:
                     brands.append(brand)
                     serializer = BrandSerializer(brand)
+                    ser.append(serializer.data)
+
+            return Response({"success": True, "brands": ser}, status=status.HTTP_200_OK)
+        except Exception as e:
+            print(e)
+            return Response({"success": False, "msg": "Something went wrong"}, status=status.
+                            HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class FilterByCategory(GenericAPIView):
+    def post(self, request):
+        try:
+            gender = request.data.get('gender')
+            products = Product.objects.filter(gender=gender)
+            categories = []
+            ser = []
+            for product in products:
+                category = product.product_category
+                if not category in categories:
+                    categories.append(category)
+                    serializer = CategorySerializer(category)
                     ser.append(serializer.data)
 
             return Response({"success": True, "brands": ser}, status=status.HTTP_200_OK)

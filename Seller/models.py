@@ -31,7 +31,6 @@ class Product(models.Model):
         ('ME', 'Men'),
         ('WO', 'Women'),
         ('KI', 'Kid'),
-        ('BE', 'Beauty')
     ]
 
     SIZETYPE_CHOICES = [
@@ -50,7 +49,7 @@ class Product(models.Model):
     product_price = models.IntegerField(max_length=100)
     product_discount = models.IntegerField(max_length=100)
     product_sizeType = models.CharField(max_length=2, choices=SIZETYPE_CHOICES, default='IN')
-    product_size = models.CharField(max_length=2)
+    product_size = models.JSONField(null=True)
     product_color = models.CharField(max_length=50)
     product_image1 = models.ImageField(null=True, upload_to='Product/images')
     product_image2 = models.ImageField(null=True, upload_to='Product/images')
