@@ -1,5 +1,5 @@
 from rest_framework.serializers import ModelSerializer
-from .models import Product, Brand, Category, SubCategory
+from .models import Product, Brand, Category, SubCategory, Size, CategorySizes, ProductQuantity
 import json
 
 
@@ -49,4 +49,22 @@ class CategorySerializer(ModelSerializer):
 class SubCategorySerializer(ModelSerializer):
     class Meta:
         model = SubCategory
+        fields = '__all__'
+
+
+class SizeSerializer(ModelSerializer):
+    class Meta:
+        model = Size
+        fields = '__all__'
+
+
+class CategorySizeSerializer(ModelSerializer):
+    class Meta:
+        model = CategorySizes
+        fields = '__all__'
+
+
+class ProductQuantitySerializer(ModelSerializer):
+    class Meta:
+        model = ProductQuantity
         fields = '__all__'

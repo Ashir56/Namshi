@@ -11,8 +11,9 @@ class Brand(models.Model):
 
 
 class Category(models.Model):
+    category_id = models.AutoField(primary_key=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    category = models.CharField(max_length=50)
+    category = models.CharField(max_length=50, unique=True)
 
     def __str__(self):
         return str(self.category)
@@ -20,10 +21,22 @@ class Category(models.Model):
 
 class SubCategory(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
     sub_category = models.CharField(max_length=50)
 
     def __str__(self):
         return str(self.sub_category)
+
+
+class Size(models.Model):
+    sizeID = models.AutoField(primary_key=True)
+    size = models.CharField(max_length=50)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+class CategorySizes(models.Model):
+    size = models.ForeignKey(Size, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
 
 class Product(models.Model):
@@ -33,11 +46,6 @@ class Product(models.Model):
         ('KI', 'Kid'),
     ]
 
-    SIZETYPE_CHOICES = [
-        ('US', 'USA'),
-        ('UK', 'UKingdom'),
-        ('IN', 'International')
-    ]
     created_at = models.DateTimeField(auto_now_add=True)
     product_id = models.AutoField(primary_key=True)
     brandName = models.ForeignKey(Brand, on_delete=models.CASCADE)
@@ -48,7 +56,6 @@ class Product(models.Model):
     product_description = models.CharField(max_length=350, null=True)
     product_price = models.IntegerField(max_length=100)
     product_discount = models.IntegerField(max_length=100)
-    product_sizeType = models.CharField(max_length=2, choices=SIZETYPE_CHOICES, default='IN')
     product_size = models.JSONField(null=True)
     product_color = models.CharField(max_length=50)
     product_image1 = models.ImageField(null=True, upload_to='Product/images')
@@ -57,3 +64,9 @@ class Product(models.Model):
     product_image4 = models.ImageField(null=True, upload_to='Product/images')
     product_image5 = models.ImageField(null=True, upload_to='Product/images')
     product_imageList = models.JSONField(null=True)
+
+
+class ProductQuantity(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    size = models.ForeignKey(Size, on_delete=models.CASCADE)
+    quantity = models.IntegerField(max_length=500)

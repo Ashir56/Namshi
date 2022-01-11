@@ -29,9 +29,14 @@ def custom_exception_handler(exc, context):
             code = str(value)
         print(response.data)
         if 'does_not_exist' in code:
+            for key, value in response.data.items():
+                message = value
+                customized_response.append(message)
+            print(customized_response)
+            key = list(response.data.keys())[0]
             response_dict = {
                 "success": False,
-                "message": "Object Does Not Exist"
+                key: "Object Does Not Exist"
             }
             response.data = response_dict
 

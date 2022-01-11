@@ -1,9 +1,11 @@
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Product, Brand, Category, SubCategory
+from .models import Product, Brand, Category, SubCategory,\
+    ProductQuantity, CategorySizes, Size
 from .serializer import ProductSerializer, BrandSerializer, CategorySerializer,\
-    SubCategorySerializer, ProductCreateSerializer
+    SubCategorySerializer, ProductCreateSerializer, \
+    SizeSerializer, CategorySizeSerializer, ProductQuantitySerializer
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import AllowAny, IsAdminUser
@@ -157,3 +159,15 @@ class FilterByCategory(GenericAPIView):
             print(e)
             return Response({"success": False, "msg": "Something went wrong"}, status=status.
                             HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class SizeAPI(viewsets.ModelViewSet):
+    queryset = Size.objects.all()
+    serializer_class = SizeSerializer
+    permission_classes = [IsAdminUser, ]
+
+
+class CategorySizesAPI(viewsets.ModelViewSet):
+    queryset = CategorySizes.objects.all()
+    serializer_class = CategorySizeSerializer
+    permission_classes = [IsAdminUser, ]
