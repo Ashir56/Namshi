@@ -56,8 +56,22 @@ class ProductAPI(viewsets.ModelViewSet):
         request.data._mutable = True
         list = request.data.get('product_size')
         request.data['product_size'] = json.dumps(list)
+        serializer = ProductCreateSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+        product = serializer.instance
+        product_sizes = eval(product.product_size)
+        sizes = []
+        quantities = eval(request.data['product_quantity'])
+        for product_size in product_sizes:
+            size = Size.objects.get(size=product_size)
+            sizes.append(size)
+        i = 0
+        while i < len(sizes):
+            product_quantity = ProductQuantity.objects.create(product=product, size=sizes[i], quantity=quantities[i])
+            i += 1
         request.data._mutable = False
-        return super(ProductAPI, self).create(request, *args, **kwargs)
+        return Response({"success": True, "msg": "Product Created"}, status=status.HTTP_200_OK)
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()

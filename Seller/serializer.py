@@ -9,6 +9,7 @@ class ProductCreateSerializer(ModelSerializer):
         fields = '__all__'
 
     def validate(self, data):
+
         img1 = data.get('product_image1')
         img2 = data.get('product_image2')
         img3 = data.get('product_image3')

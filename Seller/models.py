@@ -30,7 +30,7 @@ class SubCategory(models.Model):
 
 class Size(models.Model):
     sizeID = models.AutoField(primary_key=True)
-    size = models.CharField(max_length=50)
+    size = models.CharField(max_length=50, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
 
