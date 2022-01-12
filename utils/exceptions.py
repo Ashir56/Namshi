@@ -32,7 +32,6 @@ def custom_exception_handler(exc, context):
             for key, value in response.data.items():
                 message = value
                 customized_response.append(message)
-            print(customized_response)
             key = list(response.data.keys())[0]
             response_dict = {
                 "success": False,
@@ -45,7 +44,6 @@ def custom_exception_handler(exc, context):
             for key, value in response.data.items():
                 message = value
                 customized_response.append(message)
-            print(customized_response)
             key = list(response.data.keys())[0]
             response_dict = {
                 "success": False,
@@ -59,7 +57,6 @@ def custom_exception_handler(exc, context):
             for key, value in response.data.items():
                 message = value
                 customized_response.append(message)
-            print(customized_response)
             key = list(response.data.keys())[0]
             response_dict = {
                 "success": False,
@@ -73,7 +70,6 @@ def custom_exception_handler(exc, context):
             for key, value in response.data.items():
                 message = value
                 customized_response.append(message)
-            print(customized_response)
             key = list(response.data.keys())[0]
             response_dict = {
                 "success": False,
@@ -86,7 +82,6 @@ def custom_exception_handler(exc, context):
             for key, value in response.data.items():
                 message = value
                 customized_response.append(message)
-            print(customized_response)
             response_dict = {
                 "success": False,
                 list(response.data.keys())[0]: customized_response[0][0]
@@ -98,7 +93,6 @@ def custom_exception_handler(exc, context):
             for key, value in response.data.items():
                 message = value
                 customized_response.append(message)
-            print(customized_response)
             response_dict = {
                 "success": False,
                 list(response.data.keys())[0]: customized_response[0][0]

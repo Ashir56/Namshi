@@ -13,10 +13,11 @@ class Brand(models.Model):
 class Category(models.Model):
     category_id = models.AutoField(primary_key=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    category = models.CharField(max_length=50, unique=True)
+    category_name = models.CharField(max_length=500, unique=True)
+    parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.PROTECT)
 
     def __str__(self):
-        return str(self.category)
+        return str(self.category_name)
 
 
 class SubCategory(models.Model):

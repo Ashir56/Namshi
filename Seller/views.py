@@ -54,8 +54,8 @@ class ProductAPI(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         request.data._mutable = True
-        list = request.data.get('product_size')
-        request.data['product_size'] = json.dumps(list)
+        product_list = request.data.get('product_size')
+        request.data['product_size'] = json.dumps(product_list)
         serializer = ProductCreateSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
@@ -75,9 +75,9 @@ class ProductAPI(viewsets.ModelViewSet):
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
-        list = instance.product_size
-        list = eval(list)
-        instance.product_size = list
+        size = instance.product_size
+        product_list = eval(size)
+        instance.product_size = product_list
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
 
@@ -106,7 +106,10 @@ class SizeTypeAPI(GenericAPIView):
 
 class CategoryAPI(viewsets.ModelViewSet):
 
-    queryset = Category.objects.all()
+    def get_queryset(self):
+        if self.action in ['list', 'retrieve']:
+            return Category.objects.filter(parent__isnull=True)
+        return Category.objects.all()
 
     def get_serializer_class(self):
         return CategorySerializer
@@ -185,3 +188,17 @@ class CategorySizesAPI(viewsets.ModelViewSet):
     queryset = CategorySizes.objects.all()
     serializer_class = CategorySizeSerializer
     permission_classes = [IsAdminUser, ]
+
+
+class InventoryAPI(GenericAPIView):
+    def post(self, request):
+        try:
+            product_id = request.data.get('product_id')
+            size_ = request.data.get('size')
+            size = Size.objects.get(size=size_)
+            quantity = request.data.get('quantity')
+            product = ProductQuantity.objects.filter(product=product_id, size=size)
+            if product:
+                print("HELLO")
+        except Exception as e:
+            print(e)

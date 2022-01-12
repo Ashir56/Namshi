@@ -1,4 +1,5 @@
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import ModelSerializer, ListField
+from rest_framework_recursive.fields import RecursiveField
 from .models import Product, Brand, Category, SubCategory, Size, CategorySizes, ProductQuantity
 import json
 
@@ -42,9 +43,12 @@ class BrandSerializer(ModelSerializer):
 
 
 class CategorySerializer(ModelSerializer):
+    # children = ListField(read_only=True, child=RecursiveField(many=True))
+    children = RecursiveField('CategorySerializer', required=False, allow_null=True, many=True)
+
     class Meta:
         model = Category
-        fields = '__all__'
+        fields = ('category_id', 'category_name', 'parent', 'children')
 
 
 class SubCategorySerializer(ModelSerializer):

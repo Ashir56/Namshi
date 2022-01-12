@@ -14,6 +14,7 @@ jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
 jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 jwt_decode_handler = api_settings.JWT_DECODE_HANDLER
 
+
 class BuyerAPI(GenericAPIView):
     serializer_class = BuyerSerializer
 
