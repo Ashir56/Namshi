@@ -1,6 +1,7 @@
-from rest_framework.serializers import ModelSerializer, ListField
+from rest_framework.serializers import ModelSerializer
 from rest_framework_recursive.fields import RecursiveField
-from .models import Product, Brand, Category, SubCategory, Size, CategorySizes, ProductQuantity
+from .models import Product, Brand, Category, Size,\
+     ProductQuantity, Color, Collections, ProductCollections
 import json
 
 
@@ -43,18 +44,13 @@ class BrandSerializer(ModelSerializer):
 
 
 class CategorySerializer(ModelSerializer):
-    # children = ListField(read_only=True, child=RecursiveField(many=True))
-    children = RecursiveField('CategorySerializer', required=False, allow_null=True, many=True)
+
+    children = RecursiveField(many=True, required=False)
 
     class Meta:
         model = Category
-        fields = ('category_id', 'category_name', 'parent', 'children')
-
-
-class SubCategorySerializer(ModelSerializer):
-    class Meta:
-        model = SubCategory
-        fields = '__all__'
+        # fields = '__all__'
+        fields = ['category_id', 'category_name', 'parent', 'children', ]
 
 
 class SizeSerializer(ModelSerializer):
@@ -63,13 +59,25 @@ class SizeSerializer(ModelSerializer):
         fields = '__all__'
 
 
-class CategorySizeSerializer(ModelSerializer):
-    class Meta:
-        model = CategorySizes
-        fields = '__all__'
-
-
 class ProductQuantitySerializer(ModelSerializer):
     class Meta:
         model = ProductQuantity
+        fields = '__all__'
+
+
+class ColorSerializer(ModelSerializer):
+    class Meta:
+        model = Color
+        fields = '__all__'
+
+
+class CollectionSerializer(ModelSerializer):
+    class Meta:
+        model = Collections
+        fields = '__all__'
+
+
+class ProductCollectionsSerializer(ModelSerializer):
+    class Meta:
+        model = ProductCollections
         fields = '__all__'

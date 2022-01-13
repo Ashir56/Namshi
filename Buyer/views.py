@@ -1,4 +1,3 @@
-from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
@@ -9,6 +8,7 @@ import jwt
 from rest_framework_jwt.settings import api_settings
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
+
 # Create your views here.
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
 jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
@@ -24,13 +24,12 @@ class BuyerAPI(GenericAPIView):
         if serializer.is_valid(raise_exception=True):
             buyer = serializer.save()
             payload = jwt_payload_handler(buyer)
-            print(payload)
             token = jwt.encode(payload, 'secret', algorithm='HS256').decode('utf-8')
             if buyer.is_superuser is True:
                 return Response({"success": True, "id": buyer.id,
                                  "Msg": "Admin Created Successfully"}, status=status.HTTP_200_OK)
             return Response({"success": True, "token": token,
-                             "msg":"Buyer Created Successfully"}, status=status.HTTP_200_OK)
+                             "msg": "Buyer Created Successfully"}, status=status.HTTP_200_OK)
 
     def get(self, request):
         try:
@@ -68,22 +67,6 @@ class BuyerAPI(GenericAPIView):
             print(e)
             return Response({"success": False, "msg": str(e)},
                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
-class ISADMIN(GenericAPIView):
-    def post(self, request):
-        try:
-            username = request.data['username']
-            password = 'pbkdf2_sha256$320000$KuVaYeKylMbLGSGAAu05lO$pjwE1YIPqVfkiqajcSYnaUKm/wpBURdUzpINNUxcOGU='
-            #password = request.data['password']
-            print(username, password)
-            user = Buyer.objects.filter(username=username, password=password)
-            serializer = BuyerSerializer(user, many=True)
-            print(serializer.data)
-            return Response(serializer.data)
-        except Exception as e:
-            print(e)
-            return Response("ERROR")
 
 
 class ChangeStaffStatus(GenericAPIView):
@@ -130,3 +113,8 @@ class BuyerWishlistAPI(viewsets.ModelViewSet):
     queryset = BuyerWishlist.objects.all()
     serializer_class = BuyerWishlistSerializer
     permission_classes = [IsAuthenticated, ]
+
+
+class CartBuyingAPI(GenericAPIView):
+    def post(self, request):
+        print("HELLO")

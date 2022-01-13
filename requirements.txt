@@ -40,3 +40,4 @@ zope.interface==5.4.0
 
 pyjwt~=1.7.1
 djangorestframework-jwt~=1.11.0
+djangorestframework-recursive~=0.1.2
