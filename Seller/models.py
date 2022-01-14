@@ -46,10 +46,9 @@ class Product(models.Model):
     product_category = models.ForeignKey(Category, on_delete=models.CASCADE)
     product_title = models.CharField(max_length=50)
     product_description = models.CharField(max_length=350, null=True)
-    product_price = models.IntegerField(max_length=100)
+    product_price = models.DecimalField(max_digits=20, decimal_places=2)
     product_discount = models.IntegerField(max_length=100, default=0)
     product_size = models.JSONField(null=True)
-    product_discountprice = models.IntegerField(max_length=50, default=0)
     product_color = models.ForeignKey(Color, on_delete=models.CASCADE)
     product_image1 = models.ImageField(null=True, upload_to='Product/images')
     product_image2 = models.ImageField(null=True, upload_to='Product/images')
@@ -59,7 +58,7 @@ class Product(models.Model):
     product_imageList = models.JSONField(null=True)
 
 
-class ProductQuantity(models.Model):
+class ProductVariant(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     size = models.ForeignKey(Size, on_delete=models.CASCADE)
     color = models.ForeignKey(Color, on_delete=models.CASCADE)

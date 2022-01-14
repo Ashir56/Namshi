@@ -1,7 +1,7 @@
 from rest_framework.serializers import ModelSerializer
 from rest_framework_recursive.fields import RecursiveField
 from .models import Product, Brand, Category, Size,\
-     ProductQuantity, Color, Collections, ProductCollections
+     ProductVariant, Color, Collections, ProductCollections
 import json
 
 
@@ -11,7 +11,6 @@ class ProductCreateSerializer(ModelSerializer):
         fields = '__all__'
 
     def validate(self, data):
-
         img1 = data.get('product_image1')
         img2 = data.get('product_image2')
         img3 = data.get('product_image3')
@@ -30,7 +29,6 @@ class ProductSerializer(ModelSerializer):
         fields = '__all__'
 
     def validate(self, data):
-        print("HELLO")
         jsonDec = json.decoder.JSONDecode()
         list = data.get('product_size')
         data['product_size'] = jsonDec.decode(list)
@@ -59,9 +57,9 @@ class SizeSerializer(ModelSerializer):
         fields = '__all__'
 
 
-class ProductQuantitySerializer(ModelSerializer):
+class ProductVariantSerializer(ModelSerializer):
     class Meta:
-        model = ProductQuantity
+        model = ProductVariant
         fields = '__all__'
 
 

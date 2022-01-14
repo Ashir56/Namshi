@@ -1,14 +1,14 @@
 from rest_framework import serializers
 from .models import Buyer, BuyerAddress, BuyerCard,\
     BuyerWishlist, BuyerCart
+from django.contrib.auth.hashers import make_password, check_password
 import re
 import stripe
 from ecommerce.settings import STRIPE_SECRET_KEY
 stripe.api_key = STRIPE_SECRET_KEY
 
-class BuyerCreateSerializer(serializers.ModelSerializer):
-    fullname = serializers.CharField(max_length=100)
 
+class BuyerCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Buyer
         fields = '__all__'
@@ -18,30 +18,33 @@ class BuyerCreateSerializer(serializers.ModelSerializer):
         }
 
     def validate(self, data):
-        name = data.get('fullname')
-        fullname = name.split(' ')
-        data['first_name'] = fullname[0]
-        data['last_name'] = fullname[-1]
+        data['email'] = data.get('email').lower()
+        data['username'] = data.get('username').lower()
+        data['gender'] = data.get('gender').lower()
+        data['password'] = make_password(data.get('password'))
+
         superuser = data.get('superuser')
         if superuser:
             data['is_superuser'] = True
         if data['is_superuser']:
             data['is_staff'] = True
+        if data['is_superuser']:
+            data['is_active'] = True
         return data
 
-    def create(self, validated_data):
-        user = Buyer(
-            email=validated_data['email'],
-            username=validated_data['username'],
-            gender=validated_data['gender'],
-            first_name=validated_data['first_name'],
-            last_name=validated_data['last_name'],
-            is_staff=validated_data['is_staff'],
-            is_superuser=validated_data['is_superuser'],
-        )
-        user.set_password(validated_data['password'])
-        user.save()
-        return user
+    # def create(self, validated_data):
+    #     user = Buyer(
+    #         email=validated_data['email'],
+    #         username=validated_data['username'],
+    #         gender=validated_data['gender'],
+    #         first_name=validated_data['first_name'],
+    #         last_name=validated_data['last_name'],
+    #         is_staff=validated_data['is_staff'],
+    #         is_superuser=validated_data['is_superuser'],
+    #     )
+    #     user.set_password(validated_data['password'])
+    #     user.save()
+    #     return user
 
 
 class BuyerSerializer(serializers.ModelSerializer):
@@ -52,6 +55,19 @@ class BuyerSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'password': {'write_only': True}
         }
+
+    def validate(self, data):
+        if data.get('first_name'):
+            data['first_name'] = data.get('first_name').lower()
+        if data.get('last_name'):
+            data['last_name'] = data.get('last_name').lower()
+        if data.get('email'):
+            data['email'] = data.get('email').lower()
+        if data.get('username'):
+            data['username'] = data.get('username').lower()
+        if data.get('gender'):
+            data['gender'] = data.get('gender').lower()
+        return data
 
 
 class BuyerAddressSerializer(serializers.ModelSerializer):

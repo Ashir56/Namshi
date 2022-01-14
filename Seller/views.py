@@ -2,11 +2,11 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Product, Brand, Category,\
-    ProductQuantity, Size, Color,\
+    ProductVariant, Size, Color,\
     Collections, ProductCollections
 from .serializer import ProductSerializer, BrandSerializer, CategorySerializer,\
     ProductCreateSerializer, SizeSerializer,\
-    ProductQuantitySerializer, ColorSerializer,\
+    ProductVariantSerializer, ColorSerializer,\
     CollectionSerializer, ProductCollectionsSerializer
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.generics import GenericAPIView
@@ -66,8 +66,9 @@ class ProductAPI(viewsets.ModelViewSet):
             color_id = request.data.get('product_color')
             color = Color.objects.get(color_id=color_id)
             i = 0
+            # add sizes and colors along with their quantities
             while i < len(sizes):
-                ProductQuantity.objects.create(product=product, size=sizes[i], quantity=quantities[i], color=color)
+                ProductVariant.objects.create(product=product, size=sizes[i], quantity=quantities[i], color=color)
                 i += 1
             request.data._mutable = False
             return Response({"success": True, "msg": "Product Created"}, status=status.HTTP_200_OK)
