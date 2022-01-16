@@ -73,7 +73,13 @@ class Collections(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
 
-class ProductCollections(models.Model):
+class CollectionsVariant(models.Model):
     collection = models.ForeignKey(Collections, on_delete=models.CASCADE)
     product = models.JSONField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+
+class ShippingCountries(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    country_name = models.CharField(max_length=50)
+    shipping_cost = models.DecimalField(max_digits=50, decimal_places=2, default=0.00)

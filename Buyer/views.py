@@ -125,13 +125,15 @@ class SearchUser(GenericAPIView):
     def post(self, request):
         try:
             name = request.data.get('name')
+            if not name:
+                raise Exception("Name field can not be None")
             buyer = Buyer.objects.filter(first_name=name) | Buyer.objects.filter(last_name=name) | \
                     Buyer.objects.filter(email=name) | Buyer.objects.filter(username=name)
             serializer = BuyerSerializer(buyer, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as e:
             print(e)
-            return Response({"success": False}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({"success": False, "msg": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class BuyerAddressAPI(viewsets.ModelViewSet):

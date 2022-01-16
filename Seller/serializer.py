@@ -1,7 +1,7 @@
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import ModelSerializer, SerializerMethodField
 from rest_framework_recursive.fields import RecursiveField
 from .models import Product, Brand, Category, Size,\
-     ProductVariant, Color, Collections, ProductCollections
+     ProductVariant, Color, Collections, CollectionsVariant, ShippingCountries
 import json
 
 
@@ -70,12 +70,23 @@ class ColorSerializer(ModelSerializer):
 
 
 class CollectionSerializer(ModelSerializer):
+    image_url = SerializerMethodField('get_image_url')
+
     class Meta:
         model = Collections
         fields = '__all__'
 
+    def get_image_url(self, obj):
+        return obj.collection_image.url
+
 
 class ProductCollectionsSerializer(ModelSerializer):
     class Meta:
-        model = ProductCollections
+        model = CollectionsVariant
+        fields = '__all__'
+
+
+class ShippingCountriesSerializer(ModelSerializer):
+    class Meta:
+        model = ShippingCountries
         fields = '__all__'

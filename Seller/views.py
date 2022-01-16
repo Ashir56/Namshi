@@ -3,11 +3,11 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import Product, Brand, Category,\
     ProductVariant, Size, Color,\
-    Collections, ProductCollections
+    Collections, CollectionsVariant, ShippingCountries
 from .serializer import ProductSerializer, BrandSerializer, CategorySerializer,\
     ProductCreateSerializer, SizeSerializer,\
     ProductVariantSerializer, ColorSerializer,\
-    CollectionSerializer, ProductCollectionsSerializer
+    CollectionSerializer, ProductCollectionsSerializer, ShippingCountriesSerializer
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import AllowAny, IsAdminUser
@@ -36,16 +36,16 @@ class ProductAPI(viewsets.ModelViewSet):
 
     def get_serializer_class(self):
         if self.action in 'create':
-            self.serializer_class = ProductCreateSerializer
+            serializer_class = ProductCreateSerializer
         else:
-            self.serializer_class = ProductSerializer
+            serializer_class = ProductSerializer
         return super(ProductAPI, self).get_serializer_class()
 
     def get_permissions(self):
         if self.action in ['list', 'retrieve']:
-            self.permission_classes = [AllowAny, ]
+            permission_classes = [AllowAny, ]
         else:
-            self.permission_classes = [IsAdminUser, ]
+            permission_classes = [IsAdminUser, ]
         return super().get_permissions()
 
     def create(self, request, *args, **kwargs):
@@ -155,6 +155,7 @@ class ColorAPI(viewsets.ModelViewSet):
     permission_classes = [IsAdminUser]
 
 
+#  add/edit/delete collection
 class CollectionAPI(viewsets.ModelViewSet):
     queryset = Collections.objects.all()
     serializer_class = CollectionSerializer
@@ -162,19 +163,21 @@ class CollectionAPI(viewsets.ModelViewSet):
     def get_permissions(self):
         if self.action in ['list', 'retrieve']:
             permission_classes = [AllowAny]
-        permission_classes = [IsAdminUser]
+        else:
+            permission_classes = [IsAdminUser]
         return super(CollectionAPI, self).get_permissions()
 
 
-class ProductCollectionsAPI(viewsets.ModelViewSet):
-    queryset = ProductCollections.objects.all()
+class CollectionsVariantAPI(viewsets.ModelViewSet):
+    queryset = CollectionsVariant.objects.all()
     serializer_class = ProductCollectionsSerializer
 
     def get_permissions(self):
         if self.action in ['list', 'retrieve']:
             permission_classes = [AllowAny, ]
-        permission_classes = [IsAdminUser, ]
-        return super(ProductCollectionsAPI, self).get_permissions()
+        else:
+            permission_classes = [IsAdminUser, ]
+        return super(CollectionsVariantAPI, self).get_permissions()
 
     def create(self, request, *args, **kwargs):
         with transaction.atomic():
@@ -191,7 +194,7 @@ class ProductCollectionsAPI(viewsets.ModelViewSet):
         collection_id = request.data.get('collection_id')
         collection = Collections.object.get(collection_id=collection_id)
         ser = []
-        product_collection = ProductCollections.object.get(collection=collection)
+        product_collection = CollectionsVariant.object.get(collection=collection)
         product_ids = eval(product_collection.product)
         for product_id in product_ids:
             product = Product.objects.get(product_id=product_id)
@@ -199,3 +202,16 @@ class ProductCollectionsAPI(viewsets.ModelViewSet):
                 serializer = ProductSerializer(product, many=True)
                 ser.append(serializer.data)
         return Response(ser, status=status.HTTP_200_OK)
+
+
+# add/edit/delete shipping countries
+class ShippingCountriesAPI(ModelViewSet):
+    queryset = ShippingCountries.objects.all()
+    serializer_class = ShippingCountriesSerializer
+
+    def get_permissions(self):
+        if self.action in ['list', 'retrieve']:
+            permission_classes = [AllowAny]
+        else:
+            permission_classes = [IsAdminUser]
+        return super(ShippingCountriesAPI, self).get_permissions()
