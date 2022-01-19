@@ -11,10 +11,12 @@ router.register(r'size', views.SizeAPI, basename='Sizes')
 router.register(r'color', views.ColorAPI, basename='Colors')
 router.register(r'collection', views.CollectionAPI, basename='Collection')
 router.register(r'product-collection', views.CollectionsVariantAPI, basename='Product-Collection')
-router.register(r'shipping-country', views.ShippingCountriesAPI, basename='Shipping-Countries')
+router.register(r'occasion', views.OccasionAPI, basename='Product-Occasion')
 
 urlpatterns = [
     path('', include(router.urls)),
     path('filter-by-brand/', views.FilterByBrand.as_view()),
     path('filter-by-category/', views.FilterByCategory.as_view()),
+    path('filter-by-brand-and-category/', views.FilterByBrandAndCategory.as_view()),
+    path('discount/', views.DiscountAPI.as_view())
 ]

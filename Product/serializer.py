@@ -1,26 +1,9 @@
 from rest_framework.serializers import ModelSerializer, SerializerMethodField
 from rest_framework_recursive.fields import RecursiveField
 from .models import Product, Brand, Category, Size,\
-     ProductVariant, Color, Collections, CollectionsVariant, ShippingCountries
+     ProductVariant, Color, Collections,\
+     CollectionsVariant, Occasion
 import json
-
-
-class ProductCreateSerializer(ModelSerializer):
-    class Meta:
-        model = Product
-        fields = '__all__'
-
-    def validate(self, data):
-        img1 = data.get('product_image1')
-        img2 = data.get('product_image2')
-        img3 = data.get('product_image3')
-        img4 = data.get('product_image4')
-        img5 = data.get('product_image5')
-
-        images = [str(img1), str(img2), str(img3), str(img4), str(img5)]
-        data['product_imageList'] = images
-
-        return data
 
 
 class ProductSerializer(ModelSerializer):
@@ -29,10 +12,22 @@ class ProductSerializer(ModelSerializer):
         fields = '__all__'
 
     def validate(self, data):
-        jsonDec = json.decoder.JSONDecode()
-        list = data.get('product_size')
-        data['product_size'] = jsonDec.decode(list)
+        # img1 = data.get('product_image1')
+        # img2 = data.get('product_image2')
+        # img3 = data.get('product_image3')
+        # img4 = data.get('product_image4')
+        # img5 = data.get('product_image5')
+        #
+        # images = [str(img1), str(img2), str(img3), str(img4), str(img5)]
+        # data['product_imageList'] = images
+
         return data
+
+
+class ProductUpdateSerializer(ModelSerializer):
+    class Meta:
+        model = Product
+        fields = '__all__'
 
 
 class BrandSerializer(ModelSerializer):
@@ -70,6 +65,7 @@ class ColorSerializer(ModelSerializer):
 
 
 class CollectionSerializer(ModelSerializer):
+    # image along with the url
     image_url = SerializerMethodField('get_image_url')
 
     class Meta:
@@ -86,7 +82,7 @@ class ProductCollectionsSerializer(ModelSerializer):
         fields = '__all__'
 
 
-class ShippingCountriesSerializer(ModelSerializer):
+class OccasionSerializer(ModelSerializer):
     class Meta:
-        model = ShippingCountries
+        model = Occasion
         fields = '__all__'

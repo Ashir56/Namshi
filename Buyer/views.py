@@ -1,13 +1,15 @@
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
-from .models import Buyer, BuyerAddress, BuyerCard, BuyerWishlist, BuyerCart
+from .models import Buyer, BuyerAddress, BuyerCard, BuyerWishlist, BuyerCart,\
+    ShippingCountries, Coupon
 from .serializer import BuyerSerializer, BuyerCreateSerializer, BuyerCardCreateSerializer, \
-    BuyerAddressSerializer, BuyerCardSerializer, BuyerWishlistSerializer, BuyerCartSerializer
+    BuyerAddressSerializer, BuyerCardSerializer, BuyerWishlistSerializer, BuyerCartSerializer, \
+    ShippingCountriesSerializer, CouponSerializer
 import jwt
 from rest_framework_jwt.settings import api_settings
 from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 
 # Create your views here.
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
@@ -20,7 +22,7 @@ class BuyerAPI(GenericAPIView):
 
     def post(self, request):
         request.data._mutable = True
-        name = ""
+        name = ''
         if request.data.get('fullname'):
             name = request.data['fullname'].lower()
         fullname = name.split(' ')
@@ -164,3 +166,23 @@ class BuyerWishlistAPI(viewsets.ModelViewSet):
     queryset = BuyerWishlist.objects.all()
     serializer_class = BuyerWishlistSerializer
     permission_classes = [IsAuthenticated, ]
+
+
+# add/edit/delete shipping countries
+class ShippingCountriesAPI(viewsets.ModelViewSet):
+    queryset = ShippingCountries.objects.all()
+    serializer_class = ShippingCountriesSerializer
+
+    def get_permissions(self):
+        if self.action in ['list', 'retrieve']:
+            self.permission_classes = [AllowAny]
+        else:
+            self.permission_classes = [IsAdminUser]
+        return super(ShippingCountriesAPI, self).get_permissions()
+
+
+# add/edit/delete Coupons
+class CouponAPI(viewsets.ModelViewSet):
+    queryset = Coupon.objects.all()
+    permission_classes = [IsAdminUser]
+    serializer_class = CouponSerializer

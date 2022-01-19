@@ -4,6 +4,7 @@ from rest_framework.views import exception_handler
 from datetime import datetime
 from calendar import timegm
 from rest_framework_jwt.settings import api_settings
+from Buyer.serializer import BuyerSerializer
 
 
 def _get_codes(detail):
@@ -116,7 +117,7 @@ def custom_exception_handler(exc, context):
             response.status_code = 401
             response_dict = {
                 "success": False,
-                "message": "Authentication Failed"
+                "message": "You do not have permission for following tasks"
             }
         response.data = response_dict
     if isinstance(exc, NotAuthenticated):
@@ -149,6 +150,7 @@ def jwt_payload_handler(user):
     return {
         'user_id': str(user.pk),
         'email': user.email,
+        'username': user.username,
         'is_superuser': user.is_superuser,
         'first_name': user.first_name,
         'last_name': user.last_name,

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import Buyer, BuyerAddress, BuyerCard,\
-    BuyerWishlist, BuyerCart
+    BuyerWishlist, BuyerCart, ShippingCountries, Coupon
 from django.contrib.auth.hashers import make_password, check_password
 import re
 import stripe
@@ -118,4 +118,16 @@ class BuyerCartSerializer(serializers.ModelSerializer):
 class BuyerWishlistSerializer(serializers.ModelSerializer):
     class Meta:
         model = BuyerWishlist
+        fields = '__all__'
+
+
+class ShippingCountriesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ShippingCountries
+        fields = '__all__'
+
+
+class CouponSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Coupon
         fields = '__all__'

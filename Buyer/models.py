@@ -1,7 +1,7 @@
 import uuid
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from Seller.models import Product
+from Product.models import Product
 # Create your models here.
 
 
@@ -18,6 +18,7 @@ class Buyer(AbstractUser):
 
 
 class BuyerCard(models.Model):
+    buyerCard_id = models.AutoField(primary_key=True)
     created_at = models.DateTimeField(auto_now_add=True)
     buyer = models.ForeignKey(Buyer, on_delete=models.CASCADE)
     card_number = models.IntegerField(max_length=100)
@@ -33,6 +34,7 @@ class BuyerAddress(models.Model):
         ('HO', 'House'),
         ('OF', 'Office')
     ]
+    buyerAddress_id = models.AutoField(primary_key=True)
     created_at = models.DateTimeField(auto_now_add=True)
     buyer = models.ForeignKey(Buyer, on_delete=models.CASCADE)
     full_name = models.CharField(max_length=500)
@@ -46,12 +48,33 @@ class BuyerAddress(models.Model):
 
 
 class BuyerCart(models.Model):
+    buyerCart_id = models.AutoField(primary_key=True)
     created_at = models.DateTimeField(auto_now_add=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     buyer = models.ForeignKey(Buyer, on_delete=models.CASCADE)
 
 
 class BuyerWishlist(models.Model):
+    buyerWishlist_id = models.AutoField(primary_key=True)
     created_at = models.DateTimeField(auto_now_add=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     buyer = models.ForeignKey(Buyer, on_delete=models.CASCADE)
+
+
+class ShippingCountries(models.Model):
+    shippingCountry_id = models.AutoField(primary_key=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    country_name = models.CharField(max_length=50)
+    shipping_cost = models.DecimalField(max_digits=50, decimal_places=2, default=0.00)
+
+
+class Coupon(models.Model):
+    Coupon_Type = [
+        ('PE', 'PERCENTAGE'),
+        ('FI', 'FIXED'),
+    ]
+    coupon_id = models.AutoField(primary_key=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    country = models.ForeignKey(ShippingCountries, on_delete=models.CASCADE, unique=True)
+    coupon = models.DecimalField(max_digits=50, decimal_places=2, default=0.00)
+    coupon_type = models.CharField(max_length=2, choices=Coupon_Type, default='PE')
