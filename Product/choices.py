@@ -18,21 +18,21 @@ Discount_Type = (
     ('FI', 'FIXED'),
 )
 
-COLORS = (
-    (0, 'RED'),
-    (1, 'YELLOW'),
-    (2, 'GREEN'),
-    (3, 'BLUE'),
-    (4, 'Orange'),
-    (5, 'Beige'),
-    (6, 'Black'),
-    (7, 'Blue-Green'),
-    (8, 'Burgundy'),
-    (9, 'Gold'),
-    (10, 'Silver'),
-    (11, 'MultiColor'),
-    (12, 'White'),
-)
+COLORS = [
+    ('0', 'RED'),
+    ('1', 'YELLOW'),
+    ('2', 'GREEN'),
+    ('3', 'BLUE'),
+    ('4', 'Orange'),
+    ('5', 'Beige'),
+    ('6', 'Black'),
+    ('7', 'Blue-Green'),
+    ('8', 'Burgundy'),
+    ('9', 'Gold'),
+    ('10', 'Silver'),
+    ('11', 'MultiColor'),
+    ('12', 'White'),
+]
 
 OCCASIONS = (
     ('CA', 'CASUAL'),

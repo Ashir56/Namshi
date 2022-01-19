@@ -1,8 +1,10 @@
-from rest_framework.serializers import ModelSerializer, SerializerMethodField
+from rest_framework.serializers import ModelSerializer, SerializerMethodField, ChoiceField, JSONField
 from rest_framework_recursive.fields import RecursiveField
 from .models import Product, Brand, Category, Size,\
-     ProductVariant, Color, Collections,\
-     CollectionsVariant, Occasion
+     ProductVariant, Collections,\
+     CollectionsVariant
+from rest_framework.exceptions import ValidationError
+from . import choices
 import json
 
 
@@ -12,14 +14,13 @@ class ProductSerializer(ModelSerializer):
         fields = '__all__'
 
     def validate(self, data):
-        # img1 = data.get('product_image1')
-        # img2 = data.get('product_image2')
-        # img3 = data.get('product_image3')
-        # img4 = data.get('product_image4')
-        # img5 = data.get('product_image5')
-        #
-        # images = [str(img1), str(img2), str(img3), str(img4), str(img5)]
-        # data['product_imageList'] = images
+        lists = eval(data.get('product_color'))
+        choices_list = []
+        for choice in choices.COLORS:
+            choices_list.append(choice[0])
+        for list in lists:
+            if list not in choices_list:
+                raise ValidationError({'product_color': '{} is not a valid choice'.format(list)})
 
         return data
 
@@ -58,10 +59,10 @@ class ProductVariantSerializer(ModelSerializer):
         fields = '__all__'
 
 
-class ColorSerializer(ModelSerializer):
-    class Meta:
-        model = Color
-        fields = '__all__'
+# class ColorSerializer(ModelSerializer):
+#     class Meta:
+#         model = Color
+#         fields = '__all__'
 
 
 class CollectionSerializer(ModelSerializer):
@@ -82,7 +83,7 @@ class ProductCollectionsSerializer(ModelSerializer):
         fields = '__all__'
 
 
-class OccasionSerializer(ModelSerializer):
-    class Meta:
-        model = Occasion
-        fields = '__all__'
+# class OccasionSerializer(ModelSerializer):
+#     class Meta:
+#         model = Occasion
+#         fields = '__all__'

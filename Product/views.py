@@ -1,17 +1,16 @@
 from rest_framework import viewsets
 from rest_framework.response import Response
+from rest_framework.exceptions import ValidationError
 from rest_framework import status
 from .models import Product, Brand, Category,\
-    ProductVariant, Size, Color,\
-    Collections, CollectionsVariant, Occasion
+    ProductVariant, Size,\
+    Collections, CollectionsVariant
 from .serializer import BrandSerializer, CategorySerializer,\
     ProductSerializer, SizeSerializer,\
-    ProductVariantSerializer, ColorSerializer,\
-    CollectionSerializer, ProductCollectionsSerializer, OccasionSerializer
+    ProductVariantSerializer, CollectionSerializer, ProductCollectionsSerializer
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import AllowAny, IsAdminUser
-from rest_framework.authentication import BaseAuthentication
 from django.db import transaction
 import json
 
@@ -59,18 +58,14 @@ class ProductAPI(viewsets.ModelViewSet):
             product_colors = eval(product.product_color)
             product_sizes = eval(product.product_size)
             product_quantities = eval(request.data.get('product_quantity'))
-            colors = []
             quantities = 0
-            for product_color in product_colors:
-                color = Color.objects.get(color_name=product_color)
-                colors.append(color)
             color_counter = 0
             length = 0
             for product_size in product_sizes:
                 for value in product_size:
                     length += 1
             if len(product_quantities) != length:
-                return Response({'success': True, 'msg': 'Quantities and sizes have different length'},
+                return Response({'success': False, 'product': 'size and quantity does not have the same length'},
                                 status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             for product_size in product_sizes:
                 i = 0
@@ -81,7 +76,7 @@ class ProductAPI(viewsets.ModelViewSet):
                 while i < len(sizes):
                     ProductVariant.objects.create(product=product, size=sizes[i],
                                                   quantity=product_quantities[quantities],
-                                                  color=colors[color_counter]
+                                                  color=product_colors[color_counter]
                                                   )
                     i += 1
                     quantities += 1
@@ -229,16 +224,16 @@ class SizeAPI(viewsets.ModelViewSet):
         return super(SizeAPI, self).get_permissions()
 
 
-class ColorAPI(viewsets.ModelViewSet):
-    queryset = Color.objects.all()
-    serializer_class = ColorSerializer
-
-    def get_permissions(self):
-        if self.action in ['list', 'retrieve']:
-            self.permission_classes = [AllowAny]
-        else:
-            self.permission_classes = [IsAdminUser]
-        return super(ColorAPI, self).get_permissions()
+# class ColorAPI(viewsets.ModelViewSet):
+#     queryset = Color.objects.all()
+#     serializer_class = ColorSerializer
+#
+#     def get_permissions(self):
+#         if self.action in ['list', 'retrieve']:
+#             self.permission_classes = [AllowAny]
+#         else:
+#             self.permission_classes = [IsAdminUser]
+#         return super(ColorAPI, self).get_permissions()
 
 
 #  add/edit/delete collection
@@ -335,14 +330,14 @@ class DiscountAPI(GenericAPIView):
                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class OccasionAPI(ModelViewSet):
-    queryset = Occasion.objects.all()
-    serializer_class = OccasionSerializer
-
-    def get_permissions(self):
-        if self.action in ['list', 'retrieve']:
-            self.permission_classes = [AllowAny, ]
-        else:
-            self.permission_classes = [IsAdminUser, ]
-        return super(OccasionAPI, self).get_permissions()
+# class OccasionAPI(ModelViewSet):
+#     queryset = Occasion.objects.all()
+#     serializer_class = OccasionSerializer
+#
+#     def get_permissions(self):
+#         if self.action in ['list', 'retrieve']:
+#             self.permission_classes = [AllowAny, ]
+#         else:
+#             self.permission_classes = [IsAdminUser, ]
+#         return super(OccasionAPI, self).get_permissions()
 

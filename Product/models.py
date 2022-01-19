@@ -31,17 +31,17 @@ class Size(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
 
-# Occasions Predefined
-class Occasion(models.Model):
-    occasion_name = models.CharField(max_length=50, unique=True)
-    occasion_id = models.AutoField(primary_key=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-
-# Color Predefined
-class Color(models.Model):
-    color_id = models.AutoField(primary_key=True)
-    color_name = models.CharField(max_length=50)
+# # Occasions Predefined
+# class Occasion(models.Model):
+#     occasion_name = models.CharField(max_length=50, unique=True)
+#     occasion_id = models.AutoField(primary_key=True)
+#     created_at = models.DateTimeField(auto_now_add=True)
+#
+#
+# # Color Predefined
+# class Color(models.Model):
+#     color_id = models.AutoField(primary_key=True)
+#     color_name = models.CharField(max_length=50)
 
 
 # Main Product Model
@@ -59,14 +59,14 @@ class Product(models.Model):
     product_size = models.JSONField(null=True)
     product_material = models.CharField(max_length=2, choices=choices.Clothing_Material, default='NO')
     product_occasion = models.CharField(max_length=2, choices=choices.OCCASIONS, default='CA')
-    product_color = models.JSONField(null=True, choices=choices.COLORS, default='11')
+    product_color = models.JSONField(default=list)
 
 
 # Product Variant with specific product and color
 class ProductVariant(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     size = models.ForeignKey(Size, on_delete=models.CASCADE)
-    color = models.ForeignKey(Color, on_delete=models.CASCADE)
+    color = models.CharField(max_length=2, choices=choices.COLORS)
     quantity = models.IntegerField(max_length=500)
 
 
@@ -90,5 +90,5 @@ class ProductImage(models.Model):
     product_id = models.ForeignKey(Product, on_delete=models.CASCADE)
     productImageID = models.AutoField(primary_key=True)
     productImagePath = models.ImageField(upload_to='products')
-    productColorID = models.ForeignKey(Color, on_delete=models.CASCADE)
+    productColorID = models.CharField(max_length=2)
     created_at = models.DateTimeField(auto_now_add=True)

@@ -8,10 +8,10 @@ router.register(r'brand', views.BrandAPI, basename='Brand')
 router.register(r'product', views.ProductAPI, basename='Product')
 router.register(r'category', views.CategoryAPI, basename='Product-Category')
 router.register(r'size', views.SizeAPI, basename='Sizes')
-router.register(r'color', views.ColorAPI, basename='Colors')
+# router.register(r'color', views.ColorAPI, basename='Colors')
 router.register(r'collection', views.CollectionAPI, basename='Collection')
 router.register(r'product-collection', views.CollectionsVariantAPI, basename='Product-Collection')
-router.register(r'occasion', views.OccasionAPI, basename='Product-Occasion')
+# router.register(r'occasion', views.OccasionAPI, basename='Product-Occasion')
 
 urlpatterns = [
     path('', include(router.urls)),
