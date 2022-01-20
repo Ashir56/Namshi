@@ -31,19 +31,6 @@ class Size(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
 
-# # Occasions Predefined
-# class Occasion(models.Model):
-#     occasion_name = models.CharField(max_length=50, unique=True)
-#     occasion_id = models.AutoField(primary_key=True)
-#     created_at = models.DateTimeField(auto_now_add=True)
-#
-#
-# # Color Predefined
-# class Color(models.Model):
-#     color_id = models.AutoField(primary_key=True)
-#     color_name = models.CharField(max_length=50)
-
-
 # Main Product Model
 class Product(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
@@ -88,7 +75,7 @@ class CollectionsVariant(models.Model):
 
 class ProductImage(models.Model):
     product_id = models.ForeignKey(Product, on_delete=models.CASCADE)
-    productImageID = models.AutoField(primary_key=True)
-    productImagePath = models.ImageField(upload_to='products')
-    productColorID = models.CharField(max_length=2)
+    product_imageID = models.AutoField(primary_key=True)
+    product_image = models.ImageField(upload_to='products')
+    product_color = models.CharField(max_length=2)
     created_at = models.DateTimeField(auto_now_add=True)

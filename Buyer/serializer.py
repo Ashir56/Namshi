@@ -22,29 +22,14 @@ class BuyerCreateSerializer(serializers.ModelSerializer):
         data['username'] = data.get('username').lower()
         data['gender'] = data.get('gender').lower()
         data['password'] = make_password(data.get('password'))
+        data['is_active'] = True
 
         superuser = data.get('superuser')
         if superuser:
             data['is_superuser'] = True
         if data['is_superuser']:
             data['is_staff'] = True
-        if data['is_superuser']:
-            data['is_active'] = True
         return data
-
-    # def create(self, validated_data):
-    #     user = Buyer(
-    #         email=validated_data['email'],
-    #         username=validated_data['username'],
-    #         gender=validated_data['gender'],
-    #         first_name=validated_data['first_name'],
-    #         last_name=validated_data['last_name'],
-    #         is_staff=validated_data['is_staff'],
-    #         is_superuser=validated_data['is_superuser'],
-    #     )
-    #     user.set_password(validated_data['password'])
-    #     user.save()
-    #     return user
 
 
 class BuyerSerializer(serializers.ModelSerializer):

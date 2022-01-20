@@ -2,10 +2,9 @@ from rest_framework.serializers import ModelSerializer, SerializerMethodField, C
 from rest_framework_recursive.fields import RecursiveField
 from .models import Product, Brand, Category, Size,\
      ProductVariant, Collections,\
-     CollectionsVariant
+     CollectionsVariant, ProductImage
 from rest_framework.exceptions import ValidationError
 from . import choices
-import json
 
 
 class ProductSerializer(ModelSerializer):
@@ -59,12 +58,6 @@ class ProductVariantSerializer(ModelSerializer):
         fields = '__all__'
 
 
-# class ColorSerializer(ModelSerializer):
-#     class Meta:
-#         model = Color
-#         fields = '__all__'
-
-
 class CollectionSerializer(ModelSerializer):
     # image along with the url
     image_url = SerializerMethodField('get_image_url')
@@ -83,7 +76,16 @@ class ProductCollectionsSerializer(ModelSerializer):
         fields = '__all__'
 
 
-# class OccasionSerializer(ModelSerializer):
-#     class Meta:
-#         model = Occasion
-#         fields = '__all__'
+class ProductImageSerializer(ModelSerializer):
+    class Meta:
+        model = ProductImage
+        fields = '__all__'
+
+    def validate(self, data):
+        product_color = data.get('product_color')
+        product = data.get('product_id')
+        colorList = eval(product.product_color)
+        if product_color not in colorList:
+            raise ValidationError({'product_color': 'Input is not in valid product_colors'})
+
+        return data

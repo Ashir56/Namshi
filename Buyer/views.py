@@ -9,6 +9,7 @@ from .serializer import BuyerSerializer, BuyerCreateSerializer, BuyerCardCreateS
 import jwt
 from rest_framework_jwt.settings import api_settings
 from rest_framework import viewsets
+from rest_framework import permissions
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 
 # Create your views here.
@@ -159,7 +160,7 @@ class BuyerCardAPI(viewsets.ModelViewSet):
 class BuyerCartAPI(viewsets.ModelViewSet):
     queryset = BuyerCart.objects.all()
     serializer_class = BuyerCartSerializer
-    permission_classes = [IsAuthenticated, ]
+    permission_classes = [permissions.IsAuthenticated, ]
 
 
 class BuyerWishlistAPI(viewsets.ModelViewSet):

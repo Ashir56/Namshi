@@ -1,12 +1,11 @@
 from rest_framework import viewsets
 from rest_framework.response import Response
-from rest_framework.exceptions import ValidationError
 from rest_framework import status
 from .models import Product, Brand, Category,\
     ProductVariant, Size,\
-    Collections, CollectionsVariant
+    Collections, CollectionsVariant, ProductImage
 from .serializer import BrandSerializer, CategorySerializer,\
-    ProductSerializer, SizeSerializer,\
+    ProductSerializer, SizeSerializer, ProductImageSerializer,\
     ProductVariantSerializer, CollectionSerializer, ProductCollectionsSerializer
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.generics import GenericAPIView
@@ -56,6 +55,8 @@ class ProductAPI(viewsets.ModelViewSet):
                 serializer.save()
             product = serializer.instance
             product_colors = eval(product.product_color)
+            for product_color in product_colors:
+                image1 = request.data.get('product_image1')
             product_sizes = eval(product.product_size)
             product_quantities = eval(request.data.get('product_quantity'))
             quantities = 0
@@ -89,8 +90,15 @@ class ProductAPI(viewsets.ModelViewSet):
         size = instance.product_size
         product_list = eval(size)
         instance.product_size = product_list
+        ser = []
         serializer = self.get_serializer(instance)
-        return Response(serializer.data)
+        ser.append(serializer.data)
+        products = ProductImage.objects.filter(product_id=instance.product_id)
+        if products:
+            for product in products:
+                serializer = ProductImageSerializer(product)
+                ser.append(serializer.data)
+        return Response(ser)
 
 
 # add/edit/delete a category
@@ -224,18 +232,6 @@ class SizeAPI(viewsets.ModelViewSet):
         return super(SizeAPI, self).get_permissions()
 
 
-# class ColorAPI(viewsets.ModelViewSet):
-#     queryset = Color.objects.all()
-#     serializer_class = ColorSerializer
-#
-#     def get_permissions(self):
-#         if self.action in ['list', 'retrieve']:
-#             self.permission_classes = [AllowAny]
-#         else:
-#             self.permission_classes = [IsAdminUser]
-#         return super(ColorAPI, self).get_permissions()
-
-
 #  add/edit/delete collection
 class CollectionAPI(viewsets.ModelViewSet):
     queryset = Collections.objects.all()
@@ -330,14 +326,13 @@ class DiscountAPI(GenericAPIView):
                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-# class OccasionAPI(ModelViewSet):
-#     queryset = Occasion.objects.all()
-#     serializer_class = OccasionSerializer
-#
-#     def get_permissions(self):
-#         if self.action in ['list', 'retrieve']:
-#             self.permission_classes = [AllowAny, ]
-#         else:
-#             self.permission_classes = [IsAdminUser, ]
-#         return super(OccasionAPI, self).get_permissions()
+class ProductImageAPI(ModelViewSet):
+    queryset = ProductImage.objects.all()
+    serializer_class = ProductImageSerializer
 
+    def get_permissions(self):
+        if self.action in ['list', 'retrieve']:
+            self.permission_classes = [AllowAny, ]
+        else:
+            self.permission_classes = [IsAdminUser, ]
+        return super(ProductImageAPI, self).get_permissions()

@@ -2,6 +2,7 @@ import uuid
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from Product.models import Product
+from . import choices
 # Create your models here.
 
 
@@ -11,7 +12,7 @@ class Buyer(AbstractUser):
         primary_key=True,
         default=uuid.uuid4,
         editable=False)
-    profile_pic = models.ImageField(null=True, upload_to='Buyer/Images')
+    profile_pic = models.ImageField(null=True, upload_to='buyer')
     gender = models.CharField(max_length=10, blank=False)
     dob = models.DateField(max_length=10, null=True)
     phoneNumber = models.CharField(max_length=50, null=True)
@@ -29,11 +30,6 @@ class BuyerCard(models.Model):
 
 
 class BuyerAddress(models.Model):
-
-    Address_Type = [
-        ('HO', 'House'),
-        ('OF', 'Office')
-    ]
     buyerAddress_id = models.AutoField(primary_key=True)
     created_at = models.DateTimeField(auto_now_add=True)
     buyer = models.ForeignKey(Buyer, on_delete=models.CASCADE)
@@ -44,13 +40,14 @@ class BuyerAddress(models.Model):
     street_number = models.IntegerField(max_length=50)
     home_number = models.IntegerField(max_length=50)
     postal_code = models.IntegerField(max_length=50)
-    address_type = models.CharField(max_length=2, choices=Address_Type)
+    address_type = models.CharField(max_length=2, choices=choices.Address_Type)
 
 
 class BuyerCart(models.Model):
     buyerCart_id = models.AutoField(primary_key=True)
     created_at = models.DateTimeField(auto_now_add=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product_quantity = models.IntegerField(max_length=50, default=1)
     buyer = models.ForeignKey(Buyer, on_delete=models.CASCADE)
 
 
@@ -69,12 +66,9 @@ class ShippingCountries(models.Model):
 
 
 class Coupon(models.Model):
-    Coupon_Type = [
-        ('PE', 'PERCENTAGE'),
-        ('FI', 'FIXED'),
-    ]
+
     coupon_id = models.AutoField(primary_key=True)
     created_at = models.DateTimeField(auto_now_add=True)
     country = models.ForeignKey(ShippingCountries, on_delete=models.CASCADE, unique=True)
     coupon = models.DecimalField(max_digits=50, decimal_places=2, default=0.00)
-    coupon_type = models.CharField(max_length=2, choices=Coupon_Type, default='PE')
+    coupon_type = models.CharField(max_length=2, choices=choices.Coupon_Type, default='PE')

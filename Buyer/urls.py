@@ -5,6 +5,7 @@ from rest_framework_jwt.views import refresh_jwt_token
 router = DefaultRouter()
 router.register(r'shipping-countries', views.ShippingCountriesAPI, basename='shipping-countries')
 router.register(r'coupon', views.CouponAPI, basename='coupon')
+router.register(r'cart', views.BuyerCartAPI, basename='buyer cart')
 urlpatterns = [
     path('', include(router.urls)),
     path('buyer/', views.BuyerAPI.as_view(), name='Buyer-API'),

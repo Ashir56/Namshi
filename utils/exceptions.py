@@ -117,7 +117,7 @@ def custom_exception_handler(exc, context):
             response.status_code = 401
             response_dict = {
                 "success": False,
-                "message": "You do not have permission for following tasks"
+                "message": "Authentication failed"
             }
         response.data = response_dict
     if isinstance(exc, NotAuthenticated):
