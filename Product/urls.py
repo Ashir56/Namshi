@@ -8,7 +8,7 @@ router.register(r'product', views.ProductAPI, basename='Product')
 router.register(r'category', views.CategoryAPI, basename='Product-Category')
 router.register(r'size', views.SizeAPI, basename='Sizes')
 router.register(r'product-images', views.ProductImageAPI, basename='Colors')
-router.register(r'collection', views.CollectionAPI, basename='Collection')
+router.register(r'collection', views.CollectionAPI, basename='Collection'),
 router.register(r'product-collection', views.CollectionsVariantAPI, basename='Product-Collection')
 router.register(r'product-variant', views.ProductVariantAPI, basename='Product-Variant')
 

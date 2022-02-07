@@ -11,7 +11,6 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import AllowAny, IsAdminUser
 from django.db import transaction
-from django.db import transaction
 import json
 
 

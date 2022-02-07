@@ -1,0 +1,29 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="PyUnresolvedReferencesInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredIdentifiers">
+        <list>
+          <option value="Product.models.Product.objects" />
+          <option value="Product.models.Collections.object" />
+          <option value="Product.models.Category.objects" />
+          <option value="Product.models.Brand.objects" />
+          <option value="Buyer.models.BuyerAddress.objects" />
+          <option value="Buyer.models.BuyerCard.objects" />
+          <option value="Product.models.ProductVariant.objects" />
+          <option value="Buyer.models.BuyerCart.objects" />
+          <option value="Buyer.models.BuyerWishlist.objects" />
+          <option value="Buyer.models.ShippingCountries.objects" />
+          <option value="Buyer.models.Coupon.objects" />
+          <option value="Buyer.models.Invoice.objects" />
+          <option value="Buyer.models.Order.objects" />
+          <option value="Buyer.models.ReturnProduct.objects" />
+          <option value="Product.models.ProductImage.objects" />
+          <option value="Product.models.Size.objects" />
+          <option value="Product.models.Collections.objects" />
+          <option value="Product.models.CollectionsVariant.objects" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>
