@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'Buyer',
     'Product',
-    'rest_framework_swagger'
+    'drf_yasg',
+    # 'storages',
 ]
 
 SITE_ID = 1
@@ -159,7 +160,7 @@ EMAIL_HOST_USER = 'ashirrasheed1234@gmail.com'
 EMAIL_HOST_PASSWORD = 'Signingin19'
 EMAIL_USE_TLS = True
 
-
+REST_FRAMEWORK = {'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema' }
 # from utils import exceptions
 REST_FRAMEWORK = {
     'EXCEPTION_HANDLER': "utils.exceptions.custom_exception_handler"
@@ -208,3 +209,21 @@ JWT_AUTH = {
 STRIPE_PUBLIC_KEY = "pk_test_51JyaQQLfzOAVpV2nkN6veIsRPjmD6SblfL0oKSmyCjZVMZvwL5OIhQAd8vov8ZKOLzMpWqp1RQJZfaC316ouLfP1001Qsoz2fj"
 STRIPE_SECRET_KEY = "sk_test_51JyaQQLfzOAVpV2nWesUs3JdcduqgCVbWTYmFyRHyRAFk0fxMM2IcRqFzBOnyfQKkFSMVc95Z1DuaeTK1X8QFtpT00DZicqmgo"
 STRIPE_WEBHOOK_SECRET = ""
+
+
+# <?xml version="1.0" encoding=="UTF-8"?>
+# <CORSConfiguration xmlns="https://s3.amazonaws.com/doc/2006-03-01/">
+# <CORSRule>
+#     <AllowedOrigin>*</AllowedOrigin>
+#     <AllowedMethod>GET</AllowedMethod>
+#     <AllowedMethod>POST</AllowedMethod>
+#     <AllowedMethod>PUT</AllowedMethod>
+#     <AllowedHeader>*</AllowedHeader>
+# </CORSRule>
+# </CORSConfiguration>
+
+# AWS_SECRET
+# AWS_STORAGE_BUCKET_NAME = 'namshi-bucket'
+# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# AWS_S3_FILE_OVERWRITE = True
+# AWS_DEFAULT_ACL = None

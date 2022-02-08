@@ -14,6 +14,8 @@ stripe.api_key = STRIPE_SECRET_KEY
 
 # Creating Buyer And Admin Serializer
 class BuyerCreateSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(required=True)
+
     class Meta:
         model = Buyer
         fields = '__all__'
@@ -24,10 +26,14 @@ class BuyerCreateSerializer(serializers.ModelSerializer):
 
     # Save everything with lower case
     def validate(self, data):
-        data['email'] = data.get('email').lower()
-        data['username'] = data.get('username').lower()
-        data['gender'] = data.get('gender').lower()
-        data['password'] = make_password(data.get('password'))
+        if data.get('email'):
+            data['email'] = data.get('email').lower()
+        if data.get('username'):
+            data['username'] = data.get('username').lower()
+        if data.get('gender'):
+            data['gender'] = data.get('gender').lower()
+        if data.get('password'):
+            data['password'] = make_password(data.get('password'))
         data['is_active'] = True
 
         superuser = data.get('superuser')

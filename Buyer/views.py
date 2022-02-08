@@ -35,10 +35,12 @@ class BuyerAPI(GenericAPIView):
     # Creating Buyer And Admin
     def post(self, request):
         request.data._mutable = True
-        name = ''
         # Splitting name in first and last name
-        if request.data.get('fullname'):
-            name = request.data['fullname'].lower()
+        name = str(request.data['fullname'])
+        if name is None:
+            return Response({"success": False, "fullname": "This Field is required"},
+                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        name = name.lower()
         fullname = name.split(' ')
         request.data['first_name'] = fullname[0]
         request.data['last_name'] = fullname[-1]
@@ -194,7 +196,11 @@ class BuyerCartAPI(GenericAPIView):
             buyer = request.user
             carts = BuyerCart.objects.filter(buyer=buyer)
 
-            product_quantity = int(request.data.get('product_quantity'))
+            product_quantity = request.data.get('product_quantity')
+            if product_quantity:
+                product_quantity = int(product_quantity)
+            else:
+                product_quantity = 1
             product_variant_id = request.data.get('product_variant')
             product_id = request.data.get('product')
             product = Product.objects.get(product_id=product_id)
@@ -298,23 +304,21 @@ class OrderAPI(GenericAPIView):
     serializer_class = OrderSerializer
     permission_classes = [IsAuthenticated | IsAdminUser]
     renderer_classes = [TemplateHTMLRenderer]
+    template_name = 'invoice.html'
 
     # Creating an Order
     def post(self, request):
         with transaction.atomic():
             try:
                 buyer = request.user
+                buyer_coupon = 0
                 buyer_address = BuyerAddress.objects.get(buyer=buyer)
                 shipping_country = ShippingCountries.objects.get(country=buyer_address.country)
                 coupon = Coupon.objects.get(country=shipping_country)
-                buyer_coupon = 0
                 # Checking if coupon exist for that country or not
                 if coupon:
                     buyer_coupon = float(coupon.coupon)
-                if buyer_address:
-                    pass
-                else:
-                    return Response({"success": False, "msg": "You don't have any address"})
+
                 carts = BuyerCart.objects.filter(buyer=buyer)
                 # making lists to get grand total with discounts and shipping cost
                 products = []
@@ -560,11 +564,9 @@ class ReturnProductAPI(GenericAPIView):
                 # Get buyer from Request
                 buyer = request.user
                 # Get Buyer Address
-                buyer_address = BuyerAddress.objects.get(buyer=buyer)
-                # Check if Buyer Address Exist
-                if buyer_address:
-                    pass
-                else:
+                try:
+                    buyer_address = BuyerAddress.objects.get(buyer=buyer)
+                except ObjectDoesNotExist:
                     return Response({"success": False, "msg": "Buyer Does Not have an interest"},
                                     status=status.HTTP_404_NOT_FOUND)
                 # Get all the other required data from body

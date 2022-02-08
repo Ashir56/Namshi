@@ -1,9 +1,12 @@
 from rest_framework.exceptions import ValidationError, AuthenticationFailed, \
     NotAuthenticated, NotFound
+from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.views import exception_handler
 from datetime import datetime
 from calendar import timegm
 from rest_framework_jwt.settings import api_settings
+from rest_framework.response import Response
+from rest_framework import status
 from Buyer.serializer import BuyerSerializer
 
 
@@ -89,6 +92,28 @@ def custom_exception_handler(exc, context):
             }
             response.data = response_dict
 
+        elif 'null' in code:
+            print(response.data.keys())
+            for key, value in response.data.items():
+                message = value
+                customized_response.append(message)
+            response_dict = {
+                "success": False,
+                list(response.data.keys())[0]: customized_response[0][0]
+            }
+            response.data = response_dict
+
+        elif 'max_string_length' in code:
+            print(response.data.keys())
+            for key, value in response.data.items():
+                message = value
+                customized_response.append(message)
+            response_dict = {
+                "success": False,
+                list(response.data.keys())[0]: customized_response[0][0]
+            }
+            response.data = response_dict
+
         elif 'unique' in code:
             print(response.data.keys())
             for key, value in response.data.items():
@@ -139,6 +164,12 @@ def custom_exception_handler(exc, context):
                 "message": "Object Does Not Exist"
             }
         response.data = response_dict
+
+    if isinstance(exc, ObjectDoesNotExist):
+        print(type(exc.args))
+        exception = ''.join(exc.args)
+        print(exception)
+        return Response({"success": False, "message": str(exception)}, status=status.HTTP_404_NOT_FOUND)
 
     return response
 
