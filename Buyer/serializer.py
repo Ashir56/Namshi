@@ -26,6 +26,7 @@ class BuyerCreateSerializer(serializers.ModelSerializer):
 
     # Save everything with lower case
     def validate(self, data):
+        superuser = data.get('superuser')
         if data.get('email'):
             data['email'] = data.get('email').lower()
         if data.get('username'):
@@ -35,11 +36,8 @@ class BuyerCreateSerializer(serializers.ModelSerializer):
         if data.get('password'):
             data['password'] = make_password(data.get('password'))
         data['is_active'] = True
-
-        superuser = data.get('superuser')
-        if superuser:
+        if data.get('superuser'):
             data['is_superuser'] = True
-        if data['is_superuser']:
             data['is_staff'] = True
         return data
 

@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework_recursive',
     'django.contrib.sites',
     'Buyer',
+    'corsheaders',
     'Product',
     'drf_yasg',
     # 'storages',
@@ -50,6 +51,8 @@ SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -57,6 +60,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+CORS_ORIGIN_ALLOW_ALL = True
 
 ROOT_URLCONF = 'ecommerce.urls'
 
@@ -222,7 +227,8 @@ STRIPE_WEBHOOK_SECRET = ""
 # </CORSRule>
 # </CORSConfiguration>
 
-# AWS_SECRET
+# AWS_ACCESS_KEY_ID = 'AKIA2WSJRCVOYCSD4B2S'
+# AWS_SECRET_KEY = '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'
 # AWS_STORAGE_BUCKET_NAME = 'namshi-bucket'
 # DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 # AWS_S3_FILE_OVERWRITE = True

@@ -34,7 +34,7 @@ class BuyerAPI(GenericAPIView):
 
     # Creating Buyer And Admin
     def post(self, request):
-        request.data._mutable = True
+        request.POST._mutable = True
         # Splitting name in first and last name
         name = str(request.data['fullname'])
         if name is None:
@@ -51,7 +51,7 @@ class BuyerAPI(GenericAPIView):
             # Creating a Jwt token with custom payload for buyer
             payload = jwt_payload_handler(buyer)
             token = jwt.encode(payload, 'secret', algorithm='HS256').decode('utf-8')
-            request.data._mutable = False
+            request.POST._mutable = False
             if buyer.is_superuser is True:
                 return Response({"success": True, "id": buyer.id,
                                  "Msg": "Admin Created Successfully"}, status=status.HTTP_200_OK)

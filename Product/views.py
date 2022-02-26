@@ -27,7 +27,7 @@ class BrandAPI(ModelViewSet):
         if self.action in ['list', 'retrieve']:
             self.permission_classes = [AllowAny, ]
         else:
-            self.permission_classes = [IsAdminUser, ]
+            self.permission_classes = [AllowAny, ]
         return super(BrandAPI, self).get_permissions()
 
 
